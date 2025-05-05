@@ -1,14 +1,14 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import facebook from "../../public/ic_facebook.png";
-import twitter from "../../public/ic_twitter.png";
-import youtube from "../../public/Group.png";
-import instagram from "../../public/Vector.png";
+import facebook from "../../../public/ic_facebook.png";
+import twitter from "../../../public/ic_twitter.png";
+import youtube from "../../../public/Group.png";
+import instagram from "../../../public/Vector.png";
 
 function Footer() {
   return (
-    <footer className="h-[160px] bg-gray-900 px-[px]">
+    <footer className="h-[160px] bg-gray-900 px-[px] ">
       <div
         className="w-full max-w-[1920px] mx-auto
       grid grid-cols-2 grid-rows-2 gap-4

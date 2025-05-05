@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import bestImg from "../../../public/best.png";
 import { CiHeart } from "react-icons/ci";
+import noimg from "../../../public/Property.png";
 
 function page() {
   const [bestPosts, setBestPosts] = useState([]);
@@ -62,14 +63,13 @@ function page() {
                     {post.title}
                   </h3>
                   <div className="flex items-center justify-center w-18 h-18 bg-white rounded-[6px] border border-gray-200 ">
-                    <div className="relative w-12 h-12 ">
-                      <Image
-                        src={logo}
-                        alt="썸네일"
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
+                    <Image
+                      src={post.images?.[0] || noimg.src} 
+                      alt={`게시글 이미지: ${post.title}`}
+                      width={221} 
+                      height={221}
+                      className="rounded-[16px] object-cover"
+                    />
                   </div>
                 </div>
                 <div className="flex justify-between text-xs text-secondary-500">

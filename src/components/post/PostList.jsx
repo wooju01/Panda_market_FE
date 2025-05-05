@@ -1,45 +1,24 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation"; // 추가
 import PostItem from "./PostItem";
 import Link from "next/link";
-import Pagination from "../Pagination";
+import Pagination from "../common/Pagination";
 import { CiSearch } from "react-icons/ci";
+
 function PostList() {
   const [search, setSearch] = useState("");
   const [posts, setPosts] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const postsPerPage = 5;
   const [sortOption, setSortOption] = useState("latest");
+  const postsPerPage = 5;
 
-useEffect(() => {
-  let filtered = posts.filter((post) =>
-    post.title.toLowerCase().includes(search.toLowerCase())
-  );
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const currentPage = Number(searchParams.get("page") || 1);
 
-  if (sortOption === "likes") {
-    filtered = filtered.sort((a, b) => b.likes - a.likes);
-  } else {
-    filtered = filtered.sort(
-      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-    );
-  }
-
-  setFilteredPosts(filtered);
-  setCurrentPage(1);
-}, [search, posts, sortOption]);
-
-  // 검색 반영한 게시글 필터링
-  useEffect(() => {
-    const filtered = posts.filter((post) =>
-      post.title.toLowerCase().includes(search.toLowerCase())
-    );
-    setFilteredPosts(filtered);
-    setCurrentPage(1);
-  }, [search, posts]);
-
-  // 데이터 가져오기
+  // 게시글 데이터 가져오기
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -59,14 +38,44 @@ useEffect(() => {
     fetchPosts();
   }, []);
 
+  // 검색 + 정렬 적용
+  useEffect(() => {
+    let filtered = posts.filter((post) =>
+      post.title.toLowerCase().includes(search.toLowerCase())
+    );
+
+    if (sortOption === "likes") {
+      filtered = filtered.sort((a, b) => b.likes - a.likes);
+    } else {
+      filtered = filtered.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+    }
+
+    setFilteredPosts(filtered);
+  }, [search, posts, sortOption]);
+
   // 페이지 계산
   const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
   const start = (currentPage - 1) * postsPerPage;
   const end = start + postsPerPage;
   const currentPosts = filteredPosts.slice(start, end);
 
+  // 페이지 변경 핸들러
+  const handlePageChange = (page) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("page", page);
+    router.push(`?${params.toString()}`);
+  };
+
+  // 정렬 옵션 변경 시 1페이지로 이동
+  const handleSortChange = (e) => {
+    setSortOption(e.target.value);
+    handlePageChange(1);
+  };
+
   return (
-    <section className="px-4 md:px-[200px] py-8">
+    <section className="px-4 md:px-[200px] ">
       <div className="flex justify-between items-center mb-2">
         <p className="font-bold text-xl">게시글</p>
         <Link href={"/write"}>
@@ -88,7 +97,7 @@ useEffect(() => {
         <select
           className="ml-4 border px-2 py-1 rounded-[12px] text-sm border-gray-200 w-[130px] h-[42px]"
           value={sortOption}
-          onChange={(e) => setSortOption(e.target.value)}
+          onChange={handleSortChange}
         >
           <option value="latest">최신순</option>
           <option value="likes">좋아요순</option>
@@ -104,9 +113,10 @@ useEffect(() => {
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
-        onPageChange={setCurrentPage}
+        onPageChange={handlePageChange}
       />
     </section>
   );
 }
+
 export default PostList;

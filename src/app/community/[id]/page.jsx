@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import Dropdown from "@/components/Dropdown";
+import Dropdown from "@/components/common/Dropdown";
 import Image from "next/image";
 import profileImg from "../../../../public/profile.png";
 import { CiHeart } from "react-icons/ci";
@@ -60,7 +60,7 @@ function ArticleDetailPage() {
   if (!article) return <p>로딩 중...</p>;
 
   return (
-    <section className="max-w-[1920px]  mx-auto itemd px-4 md:px-[16px] py-8">
+    <section className="max-w-[1920px]  mx-auto itemd px-4 md:px-4 py-8">
       <div className="flex justify-between">
         <h2 className="text-xl font-bold mb-2">
           {article ? article.title : "제목 없음"}

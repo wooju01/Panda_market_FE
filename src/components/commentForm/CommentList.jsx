@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Dropdown from "@/components/Dropdown";
+import Dropdown from "@/components/common/Dropdown";
 import profileImg from "../../../public/profile.png";
 import empty from "../../../public/empty.png";
 import { useState } from "react";
@@ -86,7 +86,6 @@ export default function CommentList({ comments, setComments }) {
                         setEditedContent("");
                       }}
                       className="text-sm text-gray-400 border border-secondary-600 px-3 py-1"
-                      
                     >
                       취소
                     </button>
