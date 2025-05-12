@@ -95,7 +95,7 @@ function Page(props) {
     id,
     ownerNickname,
     createdAt,
-    favoriteCount,
+    favorite,
     comments = [],
   } = product;
 
@@ -150,7 +150,7 @@ function Page(props) {
                   ) : (
                     <CiHeart className="w-8 h-8" />
                   )}
-                  <span className="size-4">{favoriteCount}</span>
+                  <span className="size-4">{favorite}</span>
                 </div>
               </div>
             </div>

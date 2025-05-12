@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthProvider";
 
-
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,7 +15,7 @@ export default function LoginPage() {
   const [showModal, setShowModal] = useState(false);
   const [alertMessage, setAlertMessage] = useState("알림 메시지");
 
-  const { login } = useAuth(); 
+  const { login } = useAuth();
   const router = useRouter();
 
   const isDisabled = !email || !password;

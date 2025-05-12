@@ -1,1 +1,1 @@
-export const BASE_URL = "https://panda-market-api.vercel.app";
+export const BASE_URL = "http://localhost:5050";

@@ -36,8 +36,17 @@ function Page() {
       }
       const data = await response.json();
       console.log("API 데이터:", data);
-      if (data.list) {
-        let filteredData = data.list;
+     
+        let filteredData = [];
+
+        if (Array.isArray(data)) {
+          filteredData = data;
+        } else if (data.list) {
+          filteredData = data.list;
+        } else {
+          console.warn("❌ 예상치 못한 응답 구조:", data);
+          return;
+        }
 
         // 검색어 필터링
         if (searchTerm) {
@@ -58,7 +67,7 @@ function Page() {
         }
 
         setCurrentItems(filteredData);
-      }
+      
     } catch (err) {
       setError(err.message);
     }
@@ -92,7 +101,10 @@ function Page() {
               className="flex-grow bg-transparent border-none outline-none pl-2 text-base"
             />
           </div>
-          <button className="bg-[#3692FF] text-white w-[133px] h-[42px] rounded-[8px] text-[16px]">
+          <button
+            className="bg-[#3692FF] text-white w-[133px] h-[42px] rounded-[8px] text-[16px]"
+            onClick={() => router.push("/products/create")}
+          >
             상품 등록하기
           </button>
           <select
@@ -118,7 +130,11 @@ function Page() {
             >
               <div className="relative w-full aspect-[1/1]">
                 <Image
-                  src={product.images?.[0] || noimg}
+                  src={
+                    product.image
+                      ? `http://localhost:5050${product.image}`
+                      : noimg
+                  }
                   alt={product.name}
                   fill
                   objectFit="cover"
@@ -129,11 +145,11 @@ function Page() {
                   {product.name}
                 </p>
                 <p className="text-base font-bold text-gray-800">
-                  {product.price > 0 ? product.price.toLocaleString() : 0}원
+                  {Number(product.price).toLocaleString()}원
                 </p>
                 <p className="flex items-center gap-1 mt-1 text-gray-600">
                   <CiHeart />
-                  {product.favoriteCount}
+                  {product.favorite}
                 </p>
               </div>
             </div>

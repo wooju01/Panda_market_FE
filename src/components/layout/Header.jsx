@@ -2,12 +2,12 @@ import React, { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthProvider";  // useAuth 훅을 가져옵니다.
+import { useAuth } from "@/context/AuthProvider";  
 import logo from "../../../public/logo.png";
 import profileImg from "../../../public/profile.png";
 
 function Header() {
-  const { isAuthenticated, nickname, login, logout } = useAuth();  // useAuth 훅을 사용해 인증 정보 가져오기
+  const { isAuthenticated, nickname, login, logout } = useAuth(); 
   const router = useRouter();
 
   
