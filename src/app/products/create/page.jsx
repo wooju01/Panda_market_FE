@@ -45,35 +45,35 @@ export default function CreateProduct() {
     setTagList(newTags);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("description", description);
-    formData.append("price", price);
-    formData.append("tags", JSON.stringify(tagList));
-    formData.append("favoriteCount", favoriteCount);
-    if (image) formData.append("image", image);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  const formData = new FormData();
+  formData.append("name", name);
+  formData.append("description", description);
+  formData.append("price", price);
+  formData.append("tags", JSON.stringify(tagList));
+  formData.append("favoriteCount", favoriteCount);
+  if (image) formData.append("image", image);
 
-    try {
-      const token = localStorage.getItem("token"); // 토큰 확인
-      if (!token) throw new Error("로그인되지 않았습니다.");
+  try {
+    const token = localStorage.getItem("accessToken"); 
+    if (!token) throw new Error("로그인되지 않았습니다.");
 
-      const response = await fetch(`${BASE_URL}/products`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      });
+    const response = await fetch(`${BASE_URL}/products`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
 
-      if (!response.ok) throw new Error("상품 등록 실패");
+    if (!response.ok) throw new Error("상품 등록 실패");
+    router.push("/products");
+  } catch (err) {
+    setError(err.message);
+  }
+};
 
-      router.push("/products");
-    } catch (err) {
-      setError(err.message);
-    }
-  };
 
   return (
     <div className="max-w-[900px] mx-auto mt-10 p-5">

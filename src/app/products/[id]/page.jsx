@@ -6,28 +6,27 @@ import React, { useEffect, useState } from "react";
 import { CiHeart } from "react-icons/ci";
 import { IoHeart } from "react-icons/io5";
 import noImg from "../../../../public/default.png";
+import Image from "next/image";
 import ProductCommentSection from "@/components/productComponents /ProductCommentSection";
 import { BASE_URL } from "@/lib/constants";
 
 // 상품 상세 정보 조회
 const fetchProduct = async (productId, token) => {
-  const res = await fetch(
-    `${BASE_URL}/products/${productId}`,
-    {
-      headers: token
-        ? {
-            Authorization: `Bearer ${token}`,
-          }
-        : {},
-    }
-  );
+  const res = await fetch(`${BASE_URL}/products/${productId}`, {
+    headers: token
+      ? {
+          Authorization: `Bearer ${token}`,
+        }
+      : {},
+  });
   if (!res.ok) throw new Error("상품 정보 불러오기 실패");
   return res.json();
 };
 
 function Page(props) {
   const { id: productId } = use(props.params);
-  const token = typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
 
   const [isFavorite, setIsFavorite] = useState(false);
   const [isLiking, setIsLiking] = useState(false);
@@ -61,20 +60,18 @@ function Page(props) {
     try {
       const method = isFavorite ? "DELETE" : "POST";
 
-      const res = await fetch(
-        `https://panda-market-api.vercel.app/products/${productId}/favorite`,
-        {
-          method,
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await fetch(`${BASE_URL}/favorites`, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ productId: Number(productId) }),
+      });
 
-      if (!res.ok) throw new Error("좋아요 처리 실패");
-
-      setIsFavorite(!isFavorite); 
-      refetch(); 
+      // 좋아요 상태 반영
+      setIsFavorite(!isFavorite);
+      refetch();
     } catch (err) {
       alert("좋아요 중 오류 발생");
       console.error(err);
@@ -87,7 +84,7 @@ function Page(props) {
   if (isError) return <p>에러 발생</p>;
 
   const {
-    images = [],
+    images = [noImg.src],
     name,
     price,
     description,
@@ -95,20 +92,28 @@ function Page(props) {
     id,
     ownerNickname,
     createdAt,
-    favorite,
+    favoritesCount = 0,
     comments = [],
-  } = product;
+  } = product || {};
 
   return (
     <main>
       <div className="max-w-[1200px] mx-auto pt-6 pb-10 border-b border-b-secondary-200">
         <div className="flex gap-10">
-          <img
-            src={images[0] || noImg.src}
-            alt="상품 이미지"
-            className="w-[400px] h-[400px] rounded-xl object-cover border"
-          />
-
+      
+    <div className="relative w-400px h-[400px] aspect-[1/1] rounded-xl object-cover border">
+                <Image
+                  src={
+                    product.image
+                      ? `http://localhost:5050${product.image}`
+                      : noimg
+                  }
+                  alt={product.name}
+                  fill
+                  objectFit="cover"
+                  className="rounded-xl object-cover border"
+                />
+              </div>
           <div className="flex flex-1 flex-col justify-between">
             <div>
               <h1 className="text-2xl font-bold mb-2">{name}</h1>
@@ -150,7 +155,7 @@ function Page(props) {
                   ) : (
                     <CiHeart className="w-8 h-8" />
                   )}
-                  <span className="size-4">{favorite}</span>
+                  <span className="size-4">{favoritesCount}</span>
                 </div>
               </div>
             </div>
