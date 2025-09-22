@@ -4,7 +4,16 @@ import noImg from "../../../public/default.png";
 import profileImg from "../../../public/profile.png";
 import { CiHeart } from "react-icons/ci";
 
-function PostItem({ id, title, writer, createdAt, likes, image }) {
+interface PostItemProps {
+  id: number;
+  title: string;
+  writer: string;
+  createdAt: string;
+  likes: number;
+  image?: string;
+}
+
+function PostItem({ id, title, writer, createdAt, likes, image }: PostItemProps) {
   return (
     <li className="flex justify-between items-center py-4 border-b shadow-sm border-gray-100 bg-gray-50 ">
       <div className="flex flex-col justify-between h-[80px]">

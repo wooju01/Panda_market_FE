@@ -6,12 +6,13 @@ import React, { useEffect, useState } from "react";
 import { CiHeart } from "react-icons/ci";
 import { IoHeart } from "react-icons/io5";
 import noImg from "../../../../public/default.png";
+import noimg from "../../../../public/default.png";
 import Image from "next/image";
 import ProductCommentSection from "@/components/productComponents /ProductCommentSection";
 import { BASE_URL } from "@/lib/constants";
 
 // 상품 상세 정보 조회
-const fetchProduct = async (productId, token) => {
+const fetchProduct = async (productId: string, token: string | null) => {
   const res = await fetch(`${BASE_URL}/products/${productId}`, {
     headers: token
       ? {
@@ -23,13 +24,17 @@ const fetchProduct = async (productId, token) => {
   return res.json();
 };
 
-function Page(props) {
+interface PageProps {
+  params: Promise<{ id: string }>;
+}
+
+function Page(props: PageProps) {
   const { id: productId } = use(props.params);
   const token =
     typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
 
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [isLiking, setIsLiking] = useState(false);
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
+  const [isLiking, setIsLiking] = useState<boolean>(false);
 
   const {
     data: product,
@@ -127,7 +132,7 @@ function Page(props) {
               </div>
 
               <div className="flex gap-2 mb-6">
-                {tags.map((tag) => (
+                {tags.map((tag: string) => (
                   <span
                     key={tag}
                     className="bg-gray-100 text-sm text-gray-600 px-3 py-1 rounded-full"

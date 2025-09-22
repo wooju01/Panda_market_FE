@@ -2,9 +2,20 @@
 
 import { useState, useEffect } from "react";
 
-function ArticleEditor({ mode = "create", initialData, onSubmit }) {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+interface ArticleData {
+  title: string;
+  content: string;
+}
+
+interface ArticleEditorProps {
+  mode?: "create" | "edit";
+  initialData?: ArticleData;
+  onSubmit: (data: ArticleData) => Promise<void>;
+}
+
+function ArticleEditor({ mode = "create", initialData, onSubmit }: ArticleEditorProps) {
+  const [title, setTitle] = useState<string>("");
+  const [content, setContent] = useState<string>("");
 
   useEffect(() => {
     if (initialData) {

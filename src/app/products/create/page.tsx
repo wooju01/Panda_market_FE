@@ -5,19 +5,19 @@ import { useRouter } from "next/navigation";
 import { BASE_URL } from "@/lib/constants";
 
 export default function CreateProduct() {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [tags, setTags] = useState("");
-  const [tagList, setTagList] = useState([]);
-  const [favoriteCount, setFavoriteCount] = useState(0);
-  const [image, setImage] = useState(null);
-  const [preview, setPreview] = useState(null);
-  const [error, setError] = useState(null);
+  const [name, setName] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [price, setPrice] = useState<string>("");
+  const [tags, setTags] = useState<string>("");
+  const [tagList, setTagList] = useState<string[]>([]);
+  const [favoriteCount, setFavoriteCount] = useState<number>(0);
+  const [image, setImage] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (file) {
       setImage(file);
       setPreview(URL.createObjectURL(file));
@@ -29,7 +29,7 @@ export default function CreateProduct() {
     setPreview(null);
   };
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" || e.key === ",") {
       e.preventDefault();
       if (tags.trim()) {
@@ -39,20 +39,20 @@ export default function CreateProduct() {
     }
   };
 
-  const handleRemoveTag = (index) => {
+  const handleRemoveTag = (index: number) => {
     const newTags = [...tagList];
     newTags.splice(index, 1);
     setTagList(newTags);
   };
 
-const handleSubmit = async (e) => {
+const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
   const formData = new FormData();
   formData.append("name", name);
   formData.append("description", description);
   formData.append("price", price);
   formData.append("tags", JSON.stringify(tagList));
-  formData.append("favoriteCount", favoriteCount);
+    formData.append("favoriteCount", favoriteCount.toString());
   if (image) formData.append("image", image);
 
   try {
@@ -70,7 +70,8 @@ const handleSubmit = async (e) => {
     if (!response.ok) throw new Error("상품 등록 실패");
     router.push("/products");
   } catch (err) {
-    setError(err.message);
+    const message = err instanceof Error ? err.message : '상품 등록 중 오류가 발생했습니다.';
+    setError(message);
   }
 };
 
