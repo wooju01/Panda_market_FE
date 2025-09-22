@@ -9,17 +9,17 @@ import { CiHeart } from "react-icons/ci";
 import { BASE_URL } from "@/lib/constants";
 
 function Page() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [currentItems, setCurrentItems] = useState([]);
-  const [order, setOrder] = useState("createdAt");
-  const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [currentItems, setCurrentItems] = useState<any[]>([]);
+  const [order, setOrder] = useState<string>("createdAt");
+  const [error, setError] = useState<string | null>(null);
 
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentPage = Number(searchParams.get("page") || 1);
 
   // API 호출 함수
-  const fetchProducts = async () => {
+  const fetchProducts = async (): Promise<void> => {
     console.log("fetchProducts 호출됨");
     try {
       const response = await fetch(
@@ -50,7 +50,7 @@ function Page() {
 
         // 검색어 필터링
         if (searchTerm) {
-          filteredData = filteredData.filter((product) =>
+          filteredData = filteredData.filter((product: any) =>
             product.name.toLowerCase().includes(searchTerm.toLowerCase())
           );
         }
@@ -58,18 +58,19 @@ function Page() {
         // 정렬
         if (order === "favoriteCount") {
           filteredData = filteredData.sort(
-            (a, b) => b.favoriteCount - a.favoriteCount
+            (a: any, b: any) => b.favoriteCount - a.favoriteCount
           );
         } else {
           filteredData = filteredData.sort(
-            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+            (a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
           );
         }
 
         setCurrentItems(filteredData);
       
     } catch (err) {
-      setError(err.message);
+      const message = err instanceof Error ? err.message : '상품을 불러오는 데 실패했습니다.';
+      setError(message);
     }
   };
 
@@ -79,9 +80,9 @@ function Page() {
   }, [currentPage, order, searchTerm]);
 
   // 페이지네이션 처리
-  const paginate = (pageNumber) => {
+  const paginate = (pageNumber: number) => {
     const params = new URLSearchParams(searchParams);
-    params.set("page", pageNumber);
+    params.set("page", pageNumber.toString());
     router.push(`?${params.toString()}`);
   };
 

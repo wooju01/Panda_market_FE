@@ -7,11 +7,20 @@ import Link from "next/link";
 import Pagination from "../common/Pagination";
 import { CiSearch } from "react-icons/ci";
 
+interface Post {
+  id: number;
+  title: string;
+  createdAt: string;
+  writer: string;
+  likes: number;
+  image?: string;
+}
+
 function PostList() {
-  const [search, setSearch] = useState("");
-  const [posts, setPosts] = useState([]);
-  const [filteredPosts, setFilteredPosts] = useState([]);
-  const [sortOption, setSortOption] = useState("latest");
+  const [search, setSearch] = useState<string>("");
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
+  const [sortOption, setSortOption] = useState<string>("latest");
   const postsPerPage = 5;
 
   const router = useRouter();
@@ -24,7 +33,7 @@ function PostList() {
       try {
         const response = await fetch("http://localhost:5050/articles");
         const data = await response.json();
-        const enrichedPosts = data.map((post) => ({
+        const enrichedPosts = data.map((post: any) => ({
           ...post,
           writer: `판다${Math.floor(Math.random() * 100)}`,
           likes: Math.floor(Math.random() * 9999),
@@ -48,7 +57,7 @@ function PostList() {
       filtered = filtered.sort((a, b) => b.likes - a.likes);
     } else {
       filtered = filtered.sort(
-        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
     }
 
@@ -62,14 +71,14 @@ function PostList() {
   const currentPosts = filteredPosts.slice(start, end);
 
   // 페이지 변경 핸들러
-  const handlePageChange = (page) => {
+  const handlePageChange = (page: number) => {
     const params = new URLSearchParams(searchParams);
-    params.set("page", page);
+    params.set("page", page.toString());
     router.push(`?${params.toString()}`);
   };
 
   // 정렬 옵션 변경 시 1페이지로 이동
-  const handleSortChange = (e) => {
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSortOption(e.target.value);
     handlePageChange(1);
   };

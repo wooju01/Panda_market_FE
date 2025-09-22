@@ -2,14 +2,19 @@
 
 import { useState, useRef, useEffect } from "react";
 
-function Dropdown({ onEdit, onDelete }) {
-  const [open, setOpen] = useState(false);
-  const dropdownRef = useRef(null);
+interface DropdownProps {
+  onEdit: () => void;
+  onDelete: () => void;
+}
+
+function Dropdown({ onEdit, onDelete }: DropdownProps) {
+  const [open, setOpen] = useState<boolean>(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const toggleDropdown = () => setOpen(!open);
 
-  const ClickOutside = (e) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+  const ClickOutside = (e: MouseEvent) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
       setOpen(false);
     }
   };
@@ -41,6 +46,9 @@ function Dropdown({ onEdit, onDelete }) {
           </button>
           <button
             className="block w-full px-4 py-2 hover:bg-gray-100"
+
+
+             
             onClick={() => {
               onDelete();
               setOpen(false);

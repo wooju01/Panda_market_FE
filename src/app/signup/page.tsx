@@ -59,7 +59,8 @@ export default function SignupPage() {
       setShowModal(true);
     } catch (e) {
       console.error("회원가입 실패:", e);
-      setAlertMessage(e.message || "회원가입에 실패했습니다.");
+      const message = e instanceof Error ? e.message : "회원가입에 실패했습니다.";
+      setAlertMessage(message);
       setShowModal(true);
     }
   };

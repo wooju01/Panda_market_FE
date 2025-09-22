@@ -26,7 +26,8 @@ export default function LoginPage() {
       setAlertMessage("로그인 성공!");
       setShowModal(true);
     } catch (error) {
-      setAlertMessage(error.message);
+      const message = error instanceof Error ? error.message : '로그인 중 오류가 발생했습니다.';
+      setAlertMessage(message);
       setShowModal(true);
     }
   };

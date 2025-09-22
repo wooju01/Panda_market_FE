@@ -1,6 +1,12 @@
 "use client";
 
- function CommentForm({ newComment, setNewComment, onSubmit }) {
+ interface CommentFormProps {
+  newComment: string;
+  setNewComment: (comment: string) => void;
+  onSubmit: () => void;
+}
+
+function CommentForm({ newComment, setNewComment, onSubmit }: CommentFormProps) {
   return (
     <div>
       <h3 className="text-[16px] font-semibold mb-2">댓글달기</h3>

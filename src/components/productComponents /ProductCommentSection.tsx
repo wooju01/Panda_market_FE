@@ -9,11 +9,17 @@ import { BASE_URL } from "@/lib/constants";
 
 const COMMENTS_PER_PAGE = 5;
 
-const ProductCommentSection = ({ productId }) => {
-  const [comments, setComments] = useState([]);
-  const [newComment, setNewComment] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+interface ProductCommentSectionProps {
+  productId: string;
+  comments?: any[];
+  refetchComments?: () => void;
+}
+
+const ProductCommentSection = ({ productId }: ProductCommentSectionProps) => {
+  const [comments, setComments] = useState<any[]>([]);
+  const [newComment, setNewComment] = useState<string>("");
+  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -44,7 +50,7 @@ const ProductCommentSection = ({ productId }) => {
     fetchComments();
   }, [productId]);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
@@ -84,9 +90,9 @@ const ProductCommentSection = ({ productId }) => {
     }
   };
 
-  const handlePageChange = (page) => {
+  const handlePageChange = (page: number) => {
     const params = new URLSearchParams(searchParams);
-    params.set("page", page);
+    params.set("page", page.toString());
     router.push(`?${params.toString()}`);
   };
 
@@ -101,7 +107,7 @@ const ProductCommentSection = ({ productId }) => {
           rows="3"
           placeholder="댓글을 입력해주세요."
           value={newComment}
-          onChange={(e) => setNewComment(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setNewComment(e.target.value)}
         />
         {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
         <div className="flex justify-end">
